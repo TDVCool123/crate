@@ -16,6 +16,6 @@ jobs:
         run: docker pull ${{ vars.DOCKER_USER }}/crate_web:latest
  
       - name: Run Docker containers
-        run:|
+        run: |
          docker-compose version
          docker-compose up -d
