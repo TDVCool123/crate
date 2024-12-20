@@ -58,7 +58,7 @@ resource "aws_instance" "docker-server" {
  user_data = <<-EOF
              #!/bin/bash
              sudo yum update -y
-             sudo amazon-linux-extras install docker -y
+             sudo sudo yum install -y docker
              sudo service docker start
              sudo usermod -aG docker ec2-user
              sudo mkdir actions-runner && cd actions-runner
