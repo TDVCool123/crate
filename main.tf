@@ -61,11 +61,11 @@ resource "aws_instance" "docker-server" {
              sudo sudo yum install -y docker
              sudo service docker start
              sudo usermod -aG docker ec2-user
-             sudo mkdir actions-runner && cd actions-runner
-             sudo curl -o actions-runner-linux-x64-2.321.0.tar.gz -L https://github.com/actions/runner/releases/download/v2.321.0/actions-runner-linux-x64-2.321.0.tar.gz
-             sudo tar xzf ./actions-runner-linux-x64-2.321.0.tar.gz
-             sudo ./config.sh --url https://github.com/TDVCool123/crate --token AQ634URKWUTOWH4DIU4KI53HMUUOC
-             sudo ./run.sh 
+             mkdir actions-runner && cd actions-runner
+             curl -o actions-runner-linux-x64-2.321.0.tar.gz -L https://github.com/actions/runner/releases/download/v2.321.0/actions-runner-linux-x64-2.321.0.tar.gz
+             tar xzf ./actions-runner-linux-x64-2.321.0.tar.gz
+             ./config.sh --url https://github.com/TDVCool123/crate --token AQ634URKWUTOWH4DIU4KI53HMUUOC
+             ./run.sh 
              EOF
  user_data_replace_on_change = true
  key_name = aws_key_pair.docker-server-ssh.key_name
