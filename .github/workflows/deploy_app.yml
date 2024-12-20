@@ -1,0 +1,19 @@
+name: Deploy App
+on:
+  push:
+    branches: [master]
+jobs:
+  deploy:
+    runs-on: self-hosted
+    steps:
+      - name: Delete old container
+        run: docker rm -f crate_app_container || true
+      
+      - name: Pull api image from Docker Hub
+        run: docker pull ${{ vars.DOCKER_USER }}/crate_api:latest
+
+      - name: Pull web image from Docker Hub
+        run: docker pull ${{ vars.DOCKER_USER }}/crate_web:latest
+
+      - name: Run Docker containers
+        run: docker-compose up -d
