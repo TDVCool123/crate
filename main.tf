@@ -60,12 +60,7 @@ resource "aws_instance" "docker-server" {
              sudo yum update -y
              sudo sudo yum install -y docker
              sudo service docker start
-             sudo usermod -aG docker ec2-user
-             mkdir actions-runner && cd actions-runner
-             curl -o actions-runner-linux-x64-2.321.0.tar.gz -L https://github.com/actions/runner/releases/download/v2.321.0/actions-runner-linux-x64-2.321.0.tar.gz
-             tar xzf ./actions-runner-linux-x64-2.321.0.tar.gz
-             ./config.sh --url https://github.com/TDVCool123/crate --token AQ634URKWUTOWH4DIU4KI53HMUUOC
-             ./run.sh 
+             sudo usermod -aG docker ec2-user 
              EOF
  user_data_replace_on_change = true
  key_name = aws_key_pair.docker-server-ssh.key_name
