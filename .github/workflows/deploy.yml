@@ -27,13 +27,14 @@ jobs:
 
       - name: Build web docker image
         run: |
-          cd ../web
+          cd code/web
           docker build -t ${{ vars.DOCKER_USER }}/crate_web .
 
       - name: Publish web image to docker hub
         run: docker push ${{ vars.DOCKER_USER }}/crate_web:latest
   
   create_ec2:
+    needs: [build]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -61,7 +62,7 @@ jobs:
           terraform apply -auto-approve
 
   deploy:
-    needs: build
+    needs: [build, create_ec2]
     runs-on: [self-hosted]
     steps:
       - name: Delete old container
