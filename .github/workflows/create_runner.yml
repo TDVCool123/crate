@@ -43,11 +43,7 @@ jobs:
       - name: Wait for EC2 instance to initialize
         run: sleep 60
 
-      - name: connect ec2
-        run: |
-          sudo chmod 400 docker-server.key
-          echo "EC2_PUBLIC_IP_HYPHEN=${{ env.EC2_PUBLIC_IP_HYPHEN }}"
-          sudo ssh -o StrictHostKeyChecking=no -i "docker-server.key" ec2-user@${{ steps.get_ip.outputs.ip }} << EOF
+      
       
 
   connect_ec2:
@@ -60,6 +56,18 @@ jobs:
       #- name: change permitions to ssh key
        # run: sudo chmod 400 docker-server.key
 
+      - name: Copy project files to EC2
+        run: |
+          sudo chmod 400 nginx-server.key
+          ls -l
+          sudo scp -o StrictHostKeyChecking=no -i docker-server.key -r ./ ec2-user@ec2-${{ steps.get_ip.outputs.ip }}.compute-1.amazonaws.com:/
+
+      - name: connect ec2
+        run: |
+          sudo chmod 400 docker-server.key
+          echo "EC2_PUBLIC_IP_HYPHEN=${{ env.EC2_PUBLIC_IP_HYPHEN }}"
+          sudo ssh -o StrictHostKeyChecking=no -i "docker-server.key" ec2-user@${{ steps.get_ip.outputs.ip }} << EOF
+
       - name: configure self hosted
         run: |
           mkdir actions-runner 
@@ -68,23 +76,3 @@ jobs:
           tar xzf ./actions-runner-linux-x64-2.321.0.tar.gz
           ./config.sh --url https://github.com/TDVCool123/crate --token AQ634URN4OPOPFAJVU5SKWDHMVKG6
           ./run.sh
-
-
-
-  deploy:
-    needs: [ create_ec2, connect_ec2]
-    runs-on: [self-hosted]
-    steps:
-      - name: Delete old container
-        run: docker rm -f crate_app_container || true
-      
-      - name: Pull api image from docker hub
-        run: docker pull ${{ vars.DOCKER_USER }}/crate_api:latest
-
-      
-      - name: Pull web image from docker hub
-        run: docker pull ${{ vars.DOCKER_USER }}web:latest
-
-
-      - name: Run docker container
-        run: docker-compose up -d

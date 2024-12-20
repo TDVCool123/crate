@@ -14,6 +14,8 @@ jobs:
 
       - name: Pull web image from Docker Hub
         run: docker pull ${{ vars.DOCKER_USER }}/crate_web:latest
-
+ 
       - name: Run Docker containers
-        run: docker-compose up -d
+        run:|
+         docker-compose version
+         docker-compose up -d

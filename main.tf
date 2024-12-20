@@ -63,7 +63,6 @@ resource "aws_instance" "docker-server" {
              sudo usermod -aG docker ec2-user 
              sudo curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
              sudo chmod +x /usr/local/bin/docker-compose
-             docker-compose version
              EOF
  user_data_replace_on_change = true
  key_name = aws_key_pair.docker-server-ssh.key_name
