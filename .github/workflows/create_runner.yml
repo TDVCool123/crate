@@ -51,7 +51,7 @@ jobs:
         run: |
           sudo chmod 400 docker-server.key
           ls -l
-          sudo scp -o StrictHostKeyChecking=no -i "docker-server.key" -r ./ ec2-user@ec2-${{ env.EC2_PUBLIC_IP_HYPHEN }}.compute-1.amazonaws.com:/home/ec2-user/
+          sudo scp -o StrictHostKeyChecking=no -i "docker-server.key" -r * ec2-user@ec2-${{ env.EC2_PUBLIC_IP_HYPHEN }}.compute-1.amazonaws.com:/home/ec2-user/
 
       - name: connect ec2
         run: |
