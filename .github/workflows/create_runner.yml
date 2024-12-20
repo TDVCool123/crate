@@ -70,6 +70,7 @@ jobs:
           ./run.sh
 
 
+
   deploy:
     needs: [ create_ec2, connect_ec2]
     runs-on: [self-hosted]
