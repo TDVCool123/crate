@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8
+    container_name: mysql
+    environment:
+      DB_USERNAME: root
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: crate
+      DB_DATABASE: crate
+
+    ports:
+      - "3307:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+      - ./code/api/backup/backup.sql:/docker-entrypoint-initdb.d/backup.sql
+    command: sh -c "docker-entrypoint.sh mysqld && sleep 10 && mysql -h db -u root -proot crate < /docker-entrypoint-initdb.d/backup.sql && wait"
+    networks:
+      - custom_network  
+
+  web:
+    build: ./code/web
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+    networks:
+      - custom_network
+  
+  api:
+    build: ./code/api
+    ports:
+      - "8000:8000"
+    environment:
+      NODE_ENV: production
+    depends_on:
+      - db
+    command: sh -c "sleep 20 && npx sequelize-cli db:migrate && npm start"
+    networks:
+      - custom_network
+
+volumes:
+  db-data:
+
+networks:
+  custom_network:
+    name: my_app_network
+    driver: bridge

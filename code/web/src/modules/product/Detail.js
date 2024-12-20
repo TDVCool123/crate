@@ -73,7 +73,7 @@ class Detail extends PureComponent {
                       {/* Left Content - Image */}
                       <GridCell style={{ maxWidth: '35em' }}>
                         <Card>
-                          <img src={routeImage + item.image} alt={item.name} style={{ width: '100%' }}/>
+                          <img src={routeImage +"/images/stock/"+ item.image} alt={item.name} style={{ width: '100%' }}/>
                         </Card>
                       </GridCell>
 

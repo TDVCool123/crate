@@ -1,0 +1,79 @@
+name: Build Comic App
+on:
+  pull_request:
+    branches: [ 'master' ]
+  push:
+    branches: [ 'master' ]
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout source
+        uses: actions/checkout@v4
+      
+      - name: Login to docker hub
+        run: |
+          docker login -u ${{ vars.DOCKER_USER }} -p ${{ secrets.DOCKER_PASSWORD }}
+          
+      - name: Build api docker image
+        run: |
+          cd code/api
+          docker build -t ${{ vars.DOCKER_USER }}/crate_api .
+
+      - name: Publish api image to docker hub
+        run: docker push ${{ vars.DOCKER_USER }}/crate_api:latest
+
+      - name: Build web docker image
+        run: |
+          cd ../web
+          docker build -t ${{ vars.DOCKER_USER }}/crate_web .
+
+      - name: Publish web image to docker hub
+        run: docker push ${{ vars.DOCKER_USER }}/crate_web:latest
+  
+  create_ec2:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+
+      - name: Set up AWS CLI
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.10.0
+
+      - name: Deploy infrastructure with Terraform
+        run: |
+          terraform init
+          terraform destroy
+          terraform plan
+          terraform apply -auto-approve
+
+  deploy:
+    needs: build
+    runs-on: [self-hosted]
+    steps:
+      - name: Delete old container
+        run: docker rm -f crate_app_container || true
+      
+      - name: Pull api image from docker hub
+        run: docker pull ${{ vars.DOCKER_USER }}/crate_api:latest
+
+      
+      - name: Pull web image from docker hub
+        run: docker pull ${{ vars.DOCKER_USER }}web:latest
+
+
+      - name: Run docker container
+        run: docker-compose up -d

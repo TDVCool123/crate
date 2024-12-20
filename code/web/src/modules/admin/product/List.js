@@ -124,7 +124,7 @@ class List extends PureComponent {
                       ? list.map(({ id, image, name, description, createdAt, updatedAt }) => (
                           <tr key={id}>
                             <td>
-                              <img src={routeImage + image} alt={name} style={{ width: 100 }}/>
+                              <img src={routeImage+"/images/stock/" + image} alt={name} style={{ width: 100 }}/>
                             </td>
 
                             <td>
