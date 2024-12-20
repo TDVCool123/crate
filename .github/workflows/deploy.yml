@@ -8,7 +8,7 @@ on:
 jobs:
   
   create_ec2:
-    needs: [build]
+    
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -50,7 +50,7 @@ jobs:
 
 
   connect_ec2:
-    needs: [build,create_ec2]
+    needs: [create_ec2]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -74,7 +74,7 @@ jobs:
 
 
   deploy:
-    needs: [build, create_ec2, connect_ec2]
+    needs: [ create_ec2, connect_ec2]
     runs-on: [self-hosted]
     steps:
       - name: Delete old container
