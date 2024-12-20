@@ -38,9 +38,7 @@ jobs:
       - name: Retrieve EC2 Public IP
         id: get_ip
         run: |
-          echo "EC2_PUBLIC_IP=$(terraform output -raw ec2_public_ip)" >> $GITHUB_ENV
-          sleep 10
-          echo "EC2_PUBLIC_IP_HYPHEN=$(echo ${{ env.EC2_PUBLIC_IP }} | sed 's/\./-/g')" >> $GITHUB_ENV
+          echo "::set-output name=ip::$(terraform output -raw ec2_public_ip)"
 
       - name: Wait for EC2 instance to initialize
         run: sleep 60
@@ -48,7 +46,7 @@ jobs:
       - name: connect ec2
         run: |
           echo "EC2_PUBLIC_IP_HYPHEN=${{ env.EC2_PUBLIC_IP_HYPHEN }}"
-          sudo ssh -o StrictHostKeyChecking=no -i "docker-server.key" ec2-user@ec2-${{ env.EC2_PUBLIC_IP_HYPHEN }}.compute-1.amazonaws.com
+          sudo ssh -o StrictHostKeyChecking=no -i "path/to/private-key.pem" ec2-user@${{ steps.get_ip.outputs.ip }} << EOF
       
 
   connect_ec2:
