@@ -7,7 +7,9 @@ jobs:
     runs-on: self-hosted
     steps:
       - name: Delete old container
-        run: docker rm -f crate_app_container || true
+        run: |
+          whoami 
+          docker rm -f crate_app_container || true
       
       - name: Pull api image from Docker Hub
         run: docker pull ${{ vars.DOCKER_USER }}/crate_api:latest

@@ -42,7 +42,17 @@ jobs:
 
       - name: Wait for EC2 instance to initialize
         run: sleep 60
+        
+      - name: Copy project files to EC2
+        run: |
+          sudo chmod 400 docker-server.key
+          ls -l
+          sudo scp -o StrictHostKeyChecking=no -i docker-server.key -r ./ ec2-user@ec2-${{ steps.get_ip.outputs.ip }}.compute-1.amazonaws.com:/
 
+      - name: connect ec2
+        run: |
+          echo "EC2_PUBLIC_IP_HYPHEN=${{ env.EC2_PUBLIC_IP_HYPHEN }}"
+          sudo ssh -o StrictHostKeyChecking=no -i "docker-server.key" ec2-user@${{ steps.get_ip.outputs.ip }} << EOF
       
       
 
@@ -55,17 +65,6 @@ jobs:
 
       #- name: change permitions to ssh key
        # run: sudo chmod 400 docker-server.key
-
-      - name: Copy project files to EC2
-        run: |
-          sudo chmod 400 docker-server.key
-          ls -l
-          sudo scp -o StrictHostKeyChecking=no -i docker-server.key -r ./ ec2-user@ec2-${{ steps.get_ip.outputs.ip }}.compute-1.amazonaws.com:/
-
-      - name: connect ec2
-        run: |
-          echo "EC2_PUBLIC_IP_HYPHEN=${{ env.EC2_PUBLIC_IP_HYPHEN }}"
-          sudo ssh -o StrictHostKeyChecking=no -i "docker-server.key" ec2-user@${{ steps.get_ip.outputs.ip }} << EOF
 
       - name: configure self hosted
         run: |
