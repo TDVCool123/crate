@@ -39,15 +39,14 @@ jobs:
         id: get_ip
         run: |
           echo "EC2_PUBLIC_IP=$(terraform output -raw ec2_public_ip)" >> $GITHUB_ENV
-          HYPHEN_IP=$(echo "$EC2_PUBLIC_IP" | sed 's/\./-/g')
-          echo "EC2_PUBLIC_IP_HYPHEN=$HYPHEN_IP" >> $GITHUB_ENV
+          echo "EC2_PUBLIC_IP_HYPHEN=$(echo ${{ env.EC2_PUBLIC_IP }} | sed 's/\./-/g')" >> $GITHUB_ENV
 
       - name: Wait for EC2 instance to initialize
         run: sleep 60
 
       - name: connect ec2
         run: |
-          echo "EC2_PUBLIC_IP_HYPHEN=$EC2_PUBLIC_IP_HYPHEN"
+          echo "EC2_PUBLIC_IP_HYPHEN=${{ env.EC2_PUBLIC_IP_HYPHEN }}"
           sudo ssh -o StrictHostKeyChecking=no -i "docker-server.key" ec2-user@ec2-${{ env.EC2_PUBLIC_IP_HYPHEN }}.compute-1.amazonaws.com
       
 
