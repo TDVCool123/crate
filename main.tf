@@ -4,13 +4,13 @@ provider "aws" {
 }
 
 resource "aws_key_pair" "docker-server-ssh" {
-   key_name   = "docker-server-ssh-s3tf"
+   key_name   = "docker-server-ssh-ec2tf"
    public_key = file("docker-server.key.pub")
 }
 
 
 resource "aws_security_group" "docker-server-sg" {
- name        = "docker-server-sg-s3tf"
+ name        = "docker-server-sg-ec2tf"
  description = "Security group allowing SSH and HTTP access"
 
 

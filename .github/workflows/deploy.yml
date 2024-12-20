@@ -1,4 +1,4 @@
-name: Build Comic App
+name: Crate App
 on:
   pull_request:
     branches: [ 'master' ]
