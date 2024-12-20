@@ -6,32 +6,6 @@ on:
     branches: [ 'master' ]
   workflow_dispatch:
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-
-      - name: Checkout source
-        uses: actions/checkout@v4
-      
-      - name: Login to docker hub
-        run: |
-          docker login -u ${{ vars.DOCKER_USER }} -p ${{ secrets.DOCKER_PASSWORD }}
-          
-      - name: Build api docker image
-        run: |
-          cd code/api
-          docker build -t ${{ vars.DOCKER_USER }}/crate_api .
-
-      - name: Publish api image to docker hub
-        run: docker push ${{ vars.DOCKER_USER }}/crate_api:latest
-
-      - name: Build web docker image
-        run: |
-          cd code/web
-          docker build -t ${{ vars.DOCKER_USER }}/crate_web .
-
-      - name: Publish web image to docker hub
-        run: docker push ${{ vars.DOCKER_USER }}/crate_web:latest
   
   create_ec2:
     needs: [build]
