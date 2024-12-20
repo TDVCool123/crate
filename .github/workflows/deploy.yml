@@ -66,7 +66,7 @@ jobs:
           cd actions-runner
           curl -o actions-runner-linux-x64-2.321.0.tar.gz -L https://github.com/actions/runner/releases/download/v2.321.0/actions-runner-linux-x64-2.321.0.tar.gz
           tar xzf ./actions-runner-linux-x64-2.321.0.tar.gz
-          ./config.sh --url https://github.com/TDVCool123/crate --token AQ634URKWUTOWH4DIU4KI53HMUUOC
+          ./config.sh --url https://github.com/TDVCool123/crate --token AQ634URN4OPOPFAJVU5SKWDHMVKG6
           ./run.sh
 
 
